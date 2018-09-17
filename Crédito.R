@@ -20,9 +20,9 @@ daTa4="06/06/2018"
 
 # DEFINIR PASTAS DE RESULTADOS:
 getwd()
-setwd("C:\\Users\\e270780232\\Desktop\\Arquivos\\R\\Crédito")
-dir_plot="C:\\Users\\e270780232\\Desktop\\Arquivos\\R\\Crédito\\Gráficos"
-dir_plan="C:\\Users\\e270780232\\Desktop\\Arquivos\\R\\Crédito\\Tabelas"
+setwd("//SRJN3/area_corporativa/Projeto GAP-DIMAC/Automatizações/Dados de crédito - Mensal")
+dir_plot="//SRJN3/area_corporativa/Projeto GAP-DIMAC/Automatizações/Dados de crédito - Mensal/Graficos"
+dir_plan="//SRJN3/area_corporativa/Projeto GAP-DIMAC/Automatizações/Dados de crédito - Mensal/Tabelas"
 
 # PACOTES REQUERIDOS:
 # INSTALAR QUANDO NECESSÁRIO
