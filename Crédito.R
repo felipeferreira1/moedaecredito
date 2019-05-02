@@ -12,7 +12,7 @@
 
 
 #ATUALIZAR DATAS
-daTa1="201914"
+daTa1="201904"
 daTa2="2019.04"
 daTa3="04/2019"
 daTa4="30/04/2019"
@@ -87,10 +87,10 @@ names(base)=c("Data","Saldo da carteira de crédito em relação ao PIB - % - 20622
               "Saldo da carteira de crédito com recursos direcionados em relação ao PIB - % - 20628","Variação YoY7",
               "Saldo de crédito direcionado - Pessoas jurídicas / PIB - % - 20629","Variação YoY8",
               "Saldo de crédito direcionado - Pessoas físicas / PIB - % - 20630","Variação YoY9",
-              "Saldo das operações de crédito das instituições financeiras sob controle privado em relação ao PIB", "Variação YoY10",
-              "Saldo das operações de crédito das instituições financeiras sob controle público em relação ao PIB", "Variação YoY11",
-              "Saldo das operações de crédito das instituições financeiras sob controle privado nacional em relação ao PIB", "Variação YoY12",
-              "Saldo das operações de crédito das instituições financeiras sob controle estrangeiro em relação ao PIB", "Variação YoY13")
+              "Saldo das operações de crédito das instituições financeiras sob controle privado em relação a %PIB - 21299", "Variação YoY10",
+              "Saldo das operações de crédito das instituições financeiras sob controle público em relação a %PIB - 21300", "Variação YoY11",
+              "Saldo das operações de crédito das instituições financeiras sob controle privado nacional em relação a %PIB - 21301", "Variação YoY12",
+              "Saldo das operações de crédito das instituições financeiras sob controle estrangeiro em relação a %PIB - 21302", "Variação YoY13")
 
 write.csv2(base,paste0(dir_plan,"01-Saldo %PIB.csv"))
 
@@ -99,7 +99,7 @@ png(paste0(dir_plot,"01-Gráf PIB.png"),width = 800, height = 700)
 plot(base$`Saldo da carteira de crédito em relação ao PIB - % - 20622`,type="l",lwd=3,ylab="",xlab="",ylim=c(20,55),axes=F,main="Saldo da carteira de crÃ©dito em relaÃ§Ã£o ao PIB - %")
 ind=c(T,rep(F,length(base$Data)%/%30))# Vetor lógico que será utilizado para definir os rótulos no eixo x. 
                                       # O número que vem após o operador %/% representa o número de rótulos que se deseja imprimir na tela.
-                                      # Para %/%30, espera-se um número de rótulos próximo de 30 no gráfico final.
+                                      # Para %/%30, espera-se um número de ró???tulos próximo de 30 no gráfico final.
 # Define-se o eixo x no gráfico com base no vetor lógico "ind".
 # at indica a localização dos rótulos no eixo x.
 # labels indica quais são os rótulos.
