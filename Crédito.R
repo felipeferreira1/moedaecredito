@@ -12,10 +12,10 @@
 
 
 #ATUALIZAR DATAS
-daTa1="201806"
-daTa2="2018.06"
-daTa3="06/2018"
-daTa4="06/06/2018"
+daTa1="201914"
+daTa2="2019.04"
+daTa3="04/2019"
+daTa4="30/04/2019"
 
 
 # DEFINIR PASTAS DE RESULTADOS:
@@ -39,8 +39,8 @@ require(xlsx)
 require(RCurl)
 
 # SALDO % PIB
-serie=c("20622","20623","20624","20625","20626","20627","20628", "20629", "20630")
-datai="01/03/2007"
+serie=c("20622","20623","20624","20625","20626","20627","20628", "20629", "20630", "21299", "21300", "21301", "21302")
+datai="01/03/2011"
 dataf=daTa4
 
 vec_ind1=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[1],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
@@ -52,13 +52,17 @@ vec_ind6=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",seri
 vec_ind7=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[7],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
 vec_ind8=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[8],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
 vec_ind9=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[9],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
+vec_ind10=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[10],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
+vec_ind11=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[11],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
+vec_ind12=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[12],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
+vec_ind13=read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[13],"/dados?formato=csv&dataInicial=",datai,"&dataFinal=",dataf,sep="")),sep=";")
 
 
-base=cbind(vec_ind1,vec_ind2[,2],vec_ind3[,2],vec_ind4[,2],vec_ind5[,2], vec_ind6[,2], vec_ind7[,2], vec_ind8[,2], vec_ind9[,2])
-rm(list=objects(pattern="vec_ind[0-9]"))
+base=cbind(vec_ind1,vec_ind2[,2],vec_ind3[,2],vec_ind4[,2],vec_ind5[,2], vec_ind6[,2], vec_ind7[,2], vec_ind8[,2], vec_ind9[,2], vec_ind10[,2], vec_ind11[,2], vec_ind12[,2], vec_ind13[,2])
+rm(list=objects(pattern="vec_ind[0-13]"))
 
 str(base)
-names(base)=c("Data","20622","20623","20624","20625","20626","20627","20628", "20629", "20630")
+names(base)=c("Data","20622","20623","20624","20625","20626","20627","20628", "20629", "20630", "21299", "21300", "21301", "21302")
 base[,-1]=apply(base[,-1],2,function(x)as.numeric(gsub(",",".",x)))
 str(base)
 
@@ -72,7 +76,7 @@ variacao=apply(base[,-1],2,function(x){
 
 
 base=cbind(base,variacao)
-base=base[,c(1,2,11,3,12,4,13,5,14,6,15,7,16,8,17,9,18,10,19)]
+base=base[,c(1,2,15,3,16,4,17,5,18,6,19,7,20,8,21,9,21,10,23,11,24,12,25,13,26,14,27)]
 base=cbind(substr(base[,1],4,10),base[,-1])
 names(base)=c("Data","Saldo da carteira de crédito em relação ao PIB - % - 20622","Variação YoY1",
               "Saldo da carteira de crédito a pessoas jurídicas em relação ao PIB - % - 20623","Variação YoY2",
@@ -82,7 +86,11 @@ names(base)=c("Data","Saldo da carteira de crédito em relação ao PIB - % - 20622
               "Saldo de crédito livre - Pessoas físicas / PIB - % - 20627","Variação YoY6",
               "Saldo da carteira de crédito com recursos direcionados em relação ao PIB - % - 20628","Variação YoY7",
               "Saldo de crédito direcionado - Pessoas jurídicas / PIB - % - 20629","Variação YoY8",
-              "Saldo de crédito direcionado - Pessoas físicas / PIB - % - 20630","Variação YoY9")
+              "Saldo de crédito direcionado - Pessoas físicas / PIB - % - 20630","Variação YoY9",
+              "Saldo das operações de crédito das instituições financeiras sob controle privado em relação ao PIB", "Variação YoY10",
+              "Saldo das operações de crédito das instituições financeiras sob controle público em relação ao PIB", "Variação YoY11",
+              "Saldo das operações de crédito das instituições financeiras sob controle privado nacional em relação ao PIB", "Variação YoY12",
+              "Saldo das operações de crédito das instituições financeiras sob controle estrangeiro em relação ao PIB", "Variação YoY13")
 
 write.csv2(base,paste0(dir_plan,"01-Saldo %PIB.csv"))
 
