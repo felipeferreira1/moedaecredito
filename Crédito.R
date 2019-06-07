@@ -424,6 +424,12 @@ Tot=base8.b[,4]-base8.b[,7]
   meta = meta[-dim(meta)[1],]
 else
   meta = meta}
+
+{if(dim(base8.b)[1]<dim(meta)[1])
+  meta = meta[-dim(meta)[1],]
+  else
+    meta = meta}
+
 base8=cbind(base8.b$data,base8.b[,-1],PJ,PF,Tot, meta)
 rm(list=objects(pattern="^serie"))
 
