@@ -787,7 +787,7 @@ rm(list=objects(pattern="^serie"))
 
 base17[,-1]=apply(base17[,-1],2,function(x)as.numeric(gsub(",","\\.",x)))
 
-names(base17)=c("25351 - Indicador de Custo do Crédito - ICC - Total - % a.a.", "25352 - Indicador de Custo do Crédito - ICC - Pessoas jurídicas - Total - % a.a.",
+names(base17)=c("Data", "25351 - Indicador de Custo do Crédito - ICC - Total - % a.a.", "25352 - Indicador de Custo do Crédito - ICC - Pessoas jurídicas - Total - % a.a.",
 "25353 - Indicador de Custo do Crédito - ICC - Pessoas físicas - Total - % a.a.",	"27645 - Indicador de Custo do Crédito - ICC - Crédito não rotativo - Total - % a.a.",
 "27646 - Indicador de Custo do Crédito - ICC - Pessoas jurídicas - Crédito não rotativo - Total - % a.a.",	"27647 - Indicador de Custo do Crédito - ICC - Pessoas físicas - Crédito não rotativo - Total - % a.a.",
 "27672 - Indicador de Custo do Crédito - ICC - Recursos Livres - Pessoas físicas - Cheque especial - % a.a.",	"27674 - Indicador de Custo do Crédito - ICC - Recursos Livres - Pessoas físicas - Crédito pessoal não consignado vinculado à composição de dívidas - % a.a.",	
