@@ -1,12 +1,12 @@
 #Rotina para coletar e apresentar em gráficos algumas séries do banco central
 #Feito por: Felipe Simplício Ferreira
-#última atualização: 24/05/2019
+#última atualização: 21/11/2020
 
 
 #Definindo diretórios a serem utilizados
 
 getwd()
-setwd("C:/Users/e270780232/Documents")
+setwd("C:\\Users\\User\\Documents")
 
 #Carregando pacotes que serão utilizados
 #library(dplyr)
@@ -14,7 +14,7 @@ setwd("C:/Users/e270780232/Documents")
 library(ggplot2)
 library(RCurl)
 library(XML)
-library(xlsx)
+library(rio)
 library(seasonal)
 
 #Definindo data final (padrão usar a data de hoje) das séries que serão coletadas
@@ -384,7 +384,8 @@ write.csv2(base7, "07-Inadimplência.csv", row.names = F)
 
 # DADOS SPREAD
 datainicial="01/03/2011"
-serie=c("432","7806", "20715","20716","20714","20784","20785","20783")
+#serie=c("432","7806", "20715","20716","20714","20784","20785","20783")
+serie=c("20715","20716","20714","20784","20785","20783")
 
 for (i in 1:length(serie)){
   dados = read.csv(url(paste("http://api.bcb.gov.br/dados/serie/bcdata.sgs.",serie[i],"/dados?formato=csv&dataInicial=",datainicial,"&dataFinal=",datafinal,sep="")),sep=";")
@@ -398,54 +399,68 @@ for (i in 1:length(serie)){
 }
 
 rm(dados)
-base8.a = merge(serie1, serie2, by="data",all = F)
 
+base8[,-1]=apply(base8[,-1],2,function(x)as.numeric(gsub(",","\\.",x)))
+#base8.a = merge(serie1, serie2, by="data",all = F)
 
-base8.a[,-1]=apply(base8.a[,-1],2,function(x)as.numeric(gsub(",","\\.",x)))
-ind=paste0(substr(base8.a$data,1,4),substr(base8.a$data,6,7))#paste0(ano,mes)
+#base8.a[,-1]=apply(base8.a[,-1],2,function(x)as.numeric(gsub(",","\\.",x)))
+#ind=paste0(substr(base8.a$data,1,4),substr(base8.a$data,6,7))#paste0(ano,mes)
 
 # Coleta o valor da série em todos os últimos dias de cada mês (cálculo realizado para ambas as variáveis)
-meta=apply(base8.a[,-1],2,function(x) tapply(x[!is.na(x)],ind[!is.na(x)],function(y) y[length(y)]))
-meta=meta[1:which(row.names(meta)==format(as.Date(tail(base8.a$data,1)),"%Y%m")),]
+#meta=apply(base8.a[,-1],2,function(x) tapply(x[!is.na(x)],ind[!is.na(x)],function(y) y[length(y)]))
+#meta=meta[1:which(row.names(meta)==format(as.Date(tail(base8.a$data,1)),"%Y%m")),]
 #meta=meta[1:which(row.names(meta)==daTa1),] 
 #alterar a data para o mês em questÃ£o
 
-base8.b = base8[,-2]
-base8.b = base8.b[,-2]
-base8.b = na.exclude(base8.b)
-base8.b[,-1]=apply(base8.b[,-1],2,function(x)as.numeric(gsub(",","\\.",x)))
+#base8.b = base8[,-2]
+#base8.b = base8.b[,-2]
+#base8.b = na.exclude(base8.b)
+#base8.b[,-1]=apply(base8.b[,-1],2,function(x)as.numeric(gsub(",","\\.",x)))
 
-PJ=base8.b[,2]-base8.b[,5]
-PF=base8.b[,3]-base8.b[,6]
-Tot=base8.b[,4]-base8.b[,7]
+#PJ=base8.b[,2]-base8.b[,5]
+#PF=base8.b[,3]-base8.b[,6]
+#Tot=base8.b[,4]-base8.b[,7]
+
+PJ=base8[,2]-base8[,5]
+PF=base8[,3]-base8[,6]
+Tot=base8[,4]-base8[,7]
 
 #excluir a última linha da série 'meta' - que tem um mês a mais
-{if(dim(base8.b)[1]<dim(meta)[1])
-  meta = meta[-dim(meta)[1],]
-else
-  meta = meta}
+#{if(dim(base8.b)[1]<dim(meta)[1])
+ # meta = meta[-dim(meta)[1],]
+#else
+ # meta = meta}
 
-{if(dim(base8.b)[1]<dim(meta)[1])
-  meta = meta[-dim(meta)[1],]
-  else
-    meta = meta}
+#{if(dim(base8.b)[1]<dim(meta)[1])
+ # meta = meta[-dim(meta)[1],]
+  #else
+   # meta = meta}
 
-base8=cbind(base8.b$data,base8.b[,-1],PJ,PF,Tot, meta)
+#base8=cbind(base8.b$data,base8.b[,-1],PJ,PF,Tot, meta)
+base8=cbind(base8$data,base8[,-1],PJ,PF,Tot)
 rm(list=objects(pattern="^serie"))
 
-dessas_dados2=apply(base8[,c(4,10:12,5:7)],2,function(x)dessas(x))
+#dessas_dados2=apply(base8[,c(4,10:12,5:7)],2,function(x)dessas(x))
 
-base8=cbind(base8,dessas_dados2)
+#base8=cbind(base8,dessas_dados2)
+#names(base8)=c("Data","20715 - Taxa média de juros das operações de crédito - Pessoas jurídicas - Total - % a.a.",
+#               "20716 - Taxa média de juros das operações de crédito - Pessoas físicas - Total - % a.a.",
+ #              "20714 - Taxa média de juros das operações de crédito - Total - % a.a.",
+  #             "20784 - Spread médio das operações de crédito - Pessoas jurídicas - Total - p.p.",
+   #            "20785 - Spread médio das operações de crédito - Pessoas físicas - Total - p.p.",
+    #           "20783 - Spread médio das operações de crédito - Total - p.p.",
+     #          "Pessoas Jurídicas - Taxa de Captação","Pessoas Físicas - Taxa de Captação","Total - Taxa de Captação",
+      #         "432 - Meta Selic","7806 - Swap_DI_Pre_360 dias","dessaz Taxa de aplicação (eixo direito)",
+       #        "dessaz Taxa de captação","dessaz Meta Selic","dessaz SWAP DI 360","dessaz spread Pessoa  jurídica",
+        #       "dessaaz spread Pessoa  física","dessaz spread Total")
+
 names(base8)=c("Data","20715 - Taxa média de juros das operações de crédito - Pessoas jurídicas - Total - % a.a.",
                "20716 - Taxa média de juros das operações de crédito - Pessoas físicas - Total - % a.a.",
-               "20714 - Taxa média de juros das operações de crédito - Total - % a.a.",
-               "20784 - Spread médio das operações de crédito - Pessoas jurídicas - Total - p.p.",
-               "20785 - Spread médio das operações de crédito - Pessoas físicas - Total - p.p.",
-               "20783 - Spread médio das operações de crédito - Total - p.p.",
-               "Pessoas Jurídicas - Taxa de Captação","Pessoas Físicas - Taxa de Captação","Total - Taxa de Captação",
-               "432 - Meta Selic","7806 - Swap_DI_Pre_360 dias","dessaz Taxa de aplicação (eixo direito)",
-               "dessaz Taxa de captação","dessaz Meta Selic","dessaz SWAP DI 360","dessaz spread Pessoa  jurídica",
-               "dessaaz spread Pessoa  física","dessaz spread Total")
+              "20714 - Taxa média de juros das operações de crédito - Total - % a.a.",
+             "20784 - Spread médio das operações de crédito - Pessoas jurídicas - Total - p.p.",
+            "20785 - Spread médio das operações de crédito - Pessoas físicas - Total - p.p.",
+           "20783 - Spread médio das operações de crédito - Total - p.p.",
+          "Pessoas Jurídicas - Taxa de Captação","Pessoas Físicas - Taxa de Captação","Total - Taxa de Captação")
 
 write.csv2(base8, "08-Dados Spread.csv", row.names = F)
 
@@ -721,11 +736,11 @@ write.csv2(`Concessões (Média diária)`,"14-Concessões (Média diária).csv")
 )
 
 `Inadimplência (%) Variação 12 Meses (p.p.)`=c(
-  `Inadimplência (%)`[1]- as.numeric(base7$`21082 - Inadimplência da carteira de crédito - Total`[length(base7$`21082 - Inadimplência da carteira de crédito - Total`)-12]),
-  `Inadimplência (%)`[2]- as.numeric(base7$`21084 - Inadimplência da carteira de crédito - Pessoas físicas - Total - %`[length(base7$`21084 - Inadimplência da carteira de crédito - Pessoas físicas - Total - %`)-12]),
-  `Inadimplência (%)`[3]- as.numeric(base7$`21083 - Inadimplência da carteira de crédito - Pessoas jurídicas - Total - %`[length(base7$`21083 - Inadimplência da carteira de crédito - Pessoas jurídicas - Total - %`)-12]),
-  `Inadimplência (%)`[4]- as.numeric(base7$`21085 - Inadimplência da carteira de crédito com recursos livres - Total - %`[length(base7$`21085 - Inadimplência da carteira de crédito com recursos livres - Total - %`)-12]),
-  `Inadimplência (%)`[5]- as.numeric(base7$`21132 - Inadimplência da carteira de crédito com recursos direcionados - Total - %`[length(base7$`21132 - Inadimplência da carteira de crédito com recursos direcionados - Total - %`)-12])
+  as.numeric(gsub(",", ".", `Inadimplência (%)`[1]))- as.numeric(gsub(",", ".", base7$`21082 - Inadimplência da carteira de crédito - Total`[length(base7$`21082 - Inadimplência da carteira de crédito - Total`)-12])),
+  as.numeric(gsub(",", ".", `Inadimplência (%)`[2]))- as.numeric(gsub(",", ".", base7$`21084 - Inadimplência da carteira de crédito - Pessoas físicas - Total - %`[length(base7$`21084 - Inadimplência da carteira de crédito - Pessoas físicas - Total - %`)-12])),
+  as.numeric(gsub(",", ".", `Inadimplência (%)`[3]))- as.numeric(gsub(",", ".", base7$`21083 - Inadimplência da carteira de crédito - Pessoas jurídicas - Total - %`[length(base7$`21083 - Inadimplência da carteira de crédito - Pessoas jurídicas - Total - %`)-12])),
+  as.numeric(gsub(",", ".", `Inadimplência (%)`[4]))- as.numeric(gsub(",", ".", base7$`21085 - Inadimplência da carteira de crédito com recursos livres - Total - %`[length(base7$`21085 - Inadimplência da carteira de crédito com recursos livres - Total - %`)-12])),
+  as.numeric(gsub(",", ".", `Inadimplência (%)`[5]))- as.numeric(gsub(",", ".", base7$`21132 - Inadimplência da carteira de crédito com recursos direcionados - Total - %`[length(base7$`21132 - Inadimplência da carteira de crédito com recursos direcionados - Total - %`)-12]))
 )
 
 tabela2 = as.data.frame(tabela1)
@@ -796,23 +811,23 @@ names(base17)=c("Data", "25351 - Indicador de Custo do Crédito - ICC - Total - %
 write.csv2(base17,"17-ICC Custo do crédito.csv", row.names = F)
 
 
-write.xlsx(base1 ,file ="crédito.xlsx" ,sheetName ="Saldo %PIB" ,append =F )
-write.xlsx(base2 ,file ="crédito.xlsx" ,sheetName ="Saldo Tipo Recurso" ,append =T )
-write.xlsx(base3 ,file ="crédito.xlsx" ,sheetName ="Saldo tipo capital" ,append =T )
-write.xlsx(base4 ,file ="crédito.xlsx" ,sheetName ="Concessões" ,append =T )
-write.xlsx(base5 ,file ="crédito.xlsx" ,sheetName ="Endividamento" ,append =T )
-write.xlsx(base6 ,file ="crédito.xlsx" ,sheetName ="Comprometimento Renda" ,append =T )
-write.xlsx(base7 ,file ="crédito.xlsx" ,sheetName ="Inadimplência" ,append =T )
-write.xlsx(base8 ,file ="crédito.xlsx" ,sheetName ="Dados Spread" ,append =T )
-write.xlsx(base8 ,file ="crédito.xlsx" ,sheetName ="Juros" ,append =T )
-write.xlsx(base9 ,file ="crédito.xlsx" ,sheetName ="Saldo total série encadead" ,append =T )
-write.xlsx(base11 ,file ="crédito.xlsx" ,sheetName ="dados Inadimp PF rec livres" ,append =T )
-write.xlsx(base12 ,file ="crédito.xlsx" ,sheetName ="Dados PJ LIVRE longo" ,append =T )
-write.xlsx(tabela1 ,file ="crédito.xlsx" ,sheetName ="Tabela1" ,append =T )
-write.xlsx(`Concessões (Média diária)` ,file ="crédito.xlsx" ,sheetName ="Concessões (Média diária)" ,append =T )
-write.xlsx(`Crédito - resumo` ,file ="crédito.xlsx" ,sheetName ="Crédito resumo" ,append =T )
-write.xlsx(`Resumo juros e spread` ,file ="crédito.xlsx" ,sheetName ="Resumo juros e spread" ,append =T )
-write.xlsx(base17 ,file ="crédito.xlsx" ,sheetName ="ICC - Custo do crédito" ,append =T )
+export(base1, "crédito.xlsx", sheetName = "Saldo %PIB")
+export(base2, "Crédito.xlsx", which = "Saldo Tipo Recurso")
+export(base3, "Crédito.xlsx", which = "Saldo tipo capital")
+export(base4, "Crédito.xlsx", which = "Concessões")
+export(base5, "Crédito.xlsx", which = "Endividamento")
+export(base6, "Crédito.xlsx", which = "Comprometimento Renda")
+export(base7, "Crédito.xlsx", which = "Inadimplência")
+export(base8, "Crédito.xlsx", which = "Dados Spread")
+export(base9, "Crédito.xlsx", which = "Juros")
+export(base10, "Crédito.xlsx", which = "Saldo total série encadead")
+export(base11, "Crédito.xlsx", which = "dados Inadimp PF rec livres")
+export(base12, "Crédito.xlsx", which = "Dados PJ LIVRE longo")
+export(tabela1, "Crédito.xlsx", which = "Tabela1")
+export(`Concessões (Média diária)`, "Crédito.xlsx", which = "Concessões (Média diária)")
+export(`Crédito - resumo`, "Crédito.xlsx", which = "Crédito resumo")
+export(`Resumo juros e spread`, "Crédito.xlsx", which = "Resumo juros e spread")
+export(base17, "Crédito.xlsx", which = "ICC - Custo do crédito")
 
 
 #############################################################################################################
